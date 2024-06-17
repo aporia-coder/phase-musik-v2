@@ -1,17 +1,21 @@
-'use client'
-
 import { Song } from '@/components/Song'
-import { music } from '@/utils'
-import { useState } from 'react'
+import { prisma } from '@/lib/client'
 
-export default function HomePage() {
-  const [songs] = useState(music())
+const HomePage = async () => {
+  const songList = await prisma.song.findMany()
+
+  if (!songList[0]) return
+
   return (
-    <Song
-      artist={songs[0].artist}
-      cover={songs[0].cover}
-      name={songs[0].name}
-      key={songs[0].id}
-    />
+    !!songList[0].artist && (
+      <Song
+        artist={songList[0]?.artist}
+        cover={songList[0]?.coverUrl}
+        name={songList[0].name}
+        key={songList[0].id}
+      />
+    )
   )
 }
+
+export default HomePage
