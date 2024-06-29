@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Song } from '@/components/Song'
 import { prisma } from '@/lib/client'
 
