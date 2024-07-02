@@ -11,7 +11,8 @@
     "lintfix": "next lint --fix",
     "format": "prettier --write ./src",
     "prepare": "husky",
-    "commit": "cz"
+    "commit": "cz",
+    "postinstall": "prisma generate"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
