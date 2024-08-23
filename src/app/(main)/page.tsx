@@ -1,5 +1,3 @@
-import { Icon } from '@/components/Icon'
-import { Icons } from '@/components/Icon/Icons'
 import { Song } from '@/components/Song'
 import { prisma } from '@/lib/client'
 
@@ -11,10 +9,9 @@ const HomePage = async () => {
   return (
     !!songList[0].artist && (
       <>
-        <Icon icon={Icons.headphones} fill="#FFF" />
         <Song
-          artist={songList[0]?.artist}
-          cover={songList[0]?.coverUrl}
+          artist={songList[0].artist}
+          cover={songList[0].coverUrl}
           name={songList[0].name}
           key={songList[0].id}
         />

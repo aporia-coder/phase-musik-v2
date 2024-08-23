@@ -14,7 +14,11 @@
     "commit": "cz",
     "postinstall": "prisma generate",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prisma": "prisma studio",
+    "resetdb": "prisma migrate reset",
+    "dbpush": "prisma db push",
+    "generate": "prisma generate"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
@@ -22,12 +26,15 @@
   "dependencies": {
     "@clerk/nextjs": "^5.1.5",
     "@prisma/client": "^5.15.0",
+    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "lucide-react": "^0.427.0",
     "next": "latest",
     "react": "^18",
     "react-dom": "^18",
     "sharp": "^0.33.4",
-    "tailwind-merge": "^2.3.0",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
     "uuid": "^10.0.0"
   },

@@ -11,8 +11,8 @@ datasource db {
 model Song {
   id         Int      @id(map: "song_pkey") @default(autoincrement()) @db.SmallInt
   created_at DateTime @db.Timestamp(6)
-  name       String?  @default("")
-  artist     String?  @default("")
-  coverUrl   String?
-  audioUrl   String?
+  name       String  @default("")
+  artist     String  @default("")
+  coverUrl   String
+  audioUrl   String
 }
