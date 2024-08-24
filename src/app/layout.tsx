@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Montserrat, Mr_Dafoe } from 'next/font/google'
 import './globals.css'
-import { cn } from '@/utils'
 import { ClerkProvider } from '@clerk/nextjs'
+import { cn } from '@/lib/utils'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
