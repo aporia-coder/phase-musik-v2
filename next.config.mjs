@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'chillhop.com',
+        hostname: 'upload.wikimedia.org',
         port: '',
       },
     ],

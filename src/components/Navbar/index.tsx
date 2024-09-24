@@ -3,8 +3,11 @@ import { Logo } from '../Logo'
 import { Button } from '../ui/button'
 import { Headphones } from 'lucide-react'
 import Link from 'next/link'
+import { useLibrary } from '@/context/LibraryContext'
 
 export const Navbar = () => {
+  const { toggleLibraryOpen } = useLibrary()
+
   return (
     <nav className="flex justify-around items-center py-1">
       <Logo />
@@ -23,6 +26,7 @@ export const Navbar = () => {
           <Button
             variant="outline"
             className="transition ease-in-out text-1xl font-semibold"
+            onClick={toggleLibraryOpen}
           >
             <Headphones className="mr-1" /> Library
           </Button>
