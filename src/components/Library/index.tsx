@@ -12,9 +12,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip'
+import { useRef } from 'react'
+import { useOnClickOutside } from '@/hooks/useOnClickOutside'
 
 export const Library = ({ songs }: { songs: Song[] }) => {
-  const { libraryOpen } = useLibrary()
+  const libraryRef = useRef<HTMLDivElement>(null)
+  const { libraryOpen, closeLibrary } = useLibrary()
+
+  useOnClickOutside(closeLibrary, libraryRef)
 
   return (
     <div
@@ -22,6 +27,7 @@ export const Library = ({ songs }: { songs: Song[] }) => {
         `fixed top-0 left-0 bg-[#111111] z-10 py-4 w-80 h-full overflow-y-scroll transition duration-500 ease-in-out shadow `,
         libraryOpen ? 'transform translate-x-0' : '-translate-x-[110%]'
       )}
+      ref={libraryRef}
     >
       <div className="flex justify-between items-center px-4 mb-4">
         <h4 className="capitalize text-4xl font-semibold">library</h4>

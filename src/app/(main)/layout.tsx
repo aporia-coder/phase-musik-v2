@@ -6,11 +6,15 @@ import { ReactNode, useState } from 'react'
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   const [libraryOpen, setLibraryOpen] = useState(false)
+  console.log(libraryOpen)
 
   const toggleLibraryOpen = () => setLibraryOpen((prev) => !prev)
+  const closeLibrary = () => setLibraryOpen(false)
 
   return (
-    <LibraryContext.Provider value={{ libraryOpen, toggleLibraryOpen }}>
+    <LibraryContext.Provider
+      value={{ libraryOpen, toggleLibraryOpen, closeLibrary }}
+    >
       <header>
         <Navbar />
       </header>

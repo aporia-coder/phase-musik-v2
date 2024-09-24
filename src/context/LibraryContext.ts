@@ -3,6 +3,7 @@ import { createContext, useContext } from 'react'
 interface LibraryContextTypes {
   libraryOpen: boolean
   toggleLibraryOpen: () => void
+  closeLibrary: () => void
 }
 
 export const LibraryContext = createContext<LibraryContextTypes | undefined>(
