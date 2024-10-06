@@ -1,4 +1,5 @@
 import { Library } from '@/components/Library'
+import { Player } from '@/components/Player'
 import { Song } from '@/components/Song'
 import { prisma } from '@/lib/client'
 
@@ -16,6 +17,7 @@ const HomePage = async () => {
           name={songList[0].name}
           key={songList[0].id}
         />
+        <Player />
         <Library songs={songList} />
       </>
     )
