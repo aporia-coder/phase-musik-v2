@@ -1,12 +1,12 @@
 'use client'
 
+import { ModalController } from '@/components/Modal/ModalController'
 import { Navbar } from '@/components/Navbar'
 import { LibraryContext } from '@/context/LibraryContext'
 import { ReactNode, useState } from 'react'
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   const [libraryOpen, setLibraryOpen] = useState(false)
-  console.log(libraryOpen)
 
   const toggleLibraryOpen = () => setLibraryOpen((prev) => !prev)
   const closeLibrary = () => setLibraryOpen(false)
@@ -19,6 +19,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         <Navbar />
       </header>
       {children}
+      <ModalController />
     </LibraryContext.Provider>
   )
 }

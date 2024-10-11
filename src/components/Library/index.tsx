@@ -14,10 +14,12 @@ import {
 } from '../ui/tooltip'
 import { useRef } from 'react'
 import { useOnClickOutside } from '@/hooks/useOnClickOutside'
+import { Modals, useModalStore } from '../Modal/ModalController'
 
 export const Library = ({ songs }: { songs: Song[] }) => {
   const libraryRef = useRef<HTMLDivElement>(null)
   const { libraryOpen, closeLibrary } = useLibrary()
+  const { openModal } = useModalStore()
 
   useOnClickOutside(closeLibrary, libraryRef)
 
@@ -38,6 +40,7 @@ export const Library = ({ songs }: { songs: Song[] }) => {
                 variant="outline"
                 className="transition ease-in-out"
                 size="sm"
+                onClick={() => openModal(Modals.UPLOAD_SONG)}
               >
                 <Plus />
               </Button>
