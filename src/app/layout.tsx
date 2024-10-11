@@ -3,6 +3,7 @@ import { Montserrat, Mr_Dafoe } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { cn } from '@/lib/utils'
+import { ReactNode } from 'react'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
   return (
     <ClerkProvider>
