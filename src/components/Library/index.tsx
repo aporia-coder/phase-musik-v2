@@ -40,7 +40,7 @@ export const Library = ({ songs }: { songs: Song[] }) => {
                 variant="outline"
                 className="transition ease-in-out"
                 size="sm"
-                onClick={() => openModal(Modals.TEST_MODAL)}
+                onClick={() => openModal(Modals.UPLOAD_SONG)}
               >
                 <Plus />
               </Button>
