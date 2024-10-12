@@ -25,6 +25,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
   },
   overrides: [
     {

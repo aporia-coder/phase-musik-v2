@@ -5,16 +5,19 @@ import { Suspense, lazy } from 'react'
 import { create } from 'zustand'
 
 const AutoSuccessModal = lazy(() => import('./components/AutoSuccessModal'))
+const AutoErrorModal = lazy(() => import('./components/AutoErrorModal'))
 const UploadSongModal = lazy(() => import('./components/UploadSongModal'))
 
 export enum Modals {
   UPLOAD_SONG = 'upload-song',
   AUTO_SUCCESS = 'auto-success',
+  AUTO_ERROR = 'auto-error',
 }
 
 interface ModalMeta {
   [Modals.UPLOAD_SONG]: undefined
   [Modals.AUTO_SUCCESS]: undefined
+  [Modals.AUTO_ERROR]: undefined
 }
 
 interface ModalStore {
@@ -28,6 +31,7 @@ const getModal = (modal: Modals) =>
   ({
     [Modals.UPLOAD_SONG]: <UploadSongModal />,
     [Modals.AUTO_SUCCESS]: <AutoSuccessModal />,
+    [Modals.AUTO_ERROR]: <AutoErrorModal />,
   })[modal]
 
 export const ModalHandler = ({ modal }: { modal: Modals }) => {

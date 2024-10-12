@@ -10,7 +10,7 @@ datasource db {
 
 model Song {
   id         Int      @id(map: "song_pkey") @default(autoincrement()) @db.SmallInt
-  created_at DateTime @db.Timestamp(6)
+  created_at DateTime @db.Timestamp(6) @default(now())
   name       String  @default("")
   artist     String  @default("")
   coverUrl   String
