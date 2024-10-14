@@ -1,7 +1,7 @@
 'use client'
 
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { BaseModal } from '../BaseModal'
 import { Button } from '@/components/ui/button'
 import { useForm } from 'react-hook-form'
@@ -21,6 +21,7 @@ import Image from 'next/image'
 import { SongProgressValues } from './types'
 import { Modals, useModalStore } from '../../ModalController'
 import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
 
 const UploadSongModal = () => {
   const router = useRouter()
@@ -32,11 +33,13 @@ const UploadSongModal = () => {
   const decrementStep = () => setStep((prevStep) => prevStep - 1)
   const incrementStep = () => setStep((prevStep) => prevStep + 1)
 
-  const songProgress: SongProgressValues = {
-    step: step,
-    imageUrl: imageUrl,
-    songName: songName,
-  }
+  const songProgress = useMemo((): SongProgressValues => {
+    return {
+      step: step,
+      imageUrl: imageUrl,
+      songName: songName,
+    }
+  }, [step, imageUrl, songName])
 
   const updateLocalStorage = useCallback(
     () => localStorage.setItem('songProgress', JSON.stringify(songProgress)),
@@ -48,6 +51,7 @@ const UploadSongModal = () => {
   }, [step, updateLocalStorage])
 
   const handleStepOne = async () => {
+    await form.trigger(['name', 'artist'])
     if (Object.keys(form.formState.errors).length === 0) {
       updateLocalStorage()
       incrementStep()
@@ -89,7 +93,7 @@ const UploadSongModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post(`/api/library`, values)
+      await axios.post('/api/library', values)
       openModal(Modals.AUTO_SUCCESS)
       closeModal()
       router.refresh()
@@ -101,9 +105,9 @@ const UploadSongModal = () => {
 
   const isLoading = form.formState.isSubmitting
 
-  const getModalContent = () =>
+  const getModalContent = (): ReactNode =>
     ({
-      1: () => (
+      1: (
         <>
           <FormField
             control={form.control}
@@ -133,7 +137,7 @@ const UploadSongModal = () => {
           />
         </>
       ),
-      2: () => (
+      2: (
         <>
           <UploadButton
             endpoint="imageUploader"
@@ -142,8 +146,7 @@ const UploadSongModal = () => {
               form.setValue('coverUrl', res[0].url)
             }}
             onUploadError={(error: Error) => {
-              // Do something with the error.
-              alert(`ERROR! ${error.message}`)
+              openModal(Modals.AUTO_ERROR, { error: error.message })
             }}
           />
           {imageUrl && (
@@ -157,7 +160,7 @@ const UploadSongModal = () => {
           )}
         </>
       ),
-      3: () => (
+      3: (
         <>
           <UploadButton
             endpoint="songUploader"
@@ -208,7 +211,8 @@ const UploadSongModal = () => {
             disabled={!songName || isLoading}
             onClick={form.handleSubmit(onSubmit)}
           >
-            Submit
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading ? 'Please wait' : 'Submit'}
           </Button>
         </>
       ),
@@ -229,7 +233,7 @@ const UploadSongModal = () => {
             title={modalHeader}
             buttons={modalButtons()}
             description={modalDescription}
-            content={modalContent()}
+            content={modalContent}
           />
         </form>
       </Form>

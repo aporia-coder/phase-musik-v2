@@ -4,10 +4,11 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useModalStore } from '../../ModalController'
+import { Modals, useModalStore } from '../../ModalController'
 
 const AutoErrorModal = () => {
-  const { closeModal } = useModalStore()
+  const { closeModal, getModalMeta } = useModalStore()
+  const modalMeta = getModalMeta(Modals.AUTO_ERROR)
 
   setTimeout(() => closeModal(), 1000)
 
@@ -15,7 +16,7 @@ const AutoErrorModal = () => {
     <DialogContent className="flex flex-col justify-center items-center w-80 h-80 border-none">
       <CrossIcon />
       <DialogTitle>Error!</DialogTitle>
-      <DialogDescription>this is the error</DialogDescription>
+      <DialogDescription>{modalMeta?.error}</DialogDescription>
     </DialogContent>
   )
 }

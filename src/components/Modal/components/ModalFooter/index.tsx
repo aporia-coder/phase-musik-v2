@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 export const ModalFooter = ({
   buttons,
 }: {
-  buttons?: ReactNode | ReactNode[] | (() => JSX.Element)
+  buttons?: ReactNode | ReactNode[]
 }) => {
   return buttons && <DialogFooter>{buttons}</DialogFooter>
 }

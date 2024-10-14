@@ -3,6 +3,7 @@
 import { Dialog } from '../ui/dialog'
 import { Suspense, lazy } from 'react'
 import { create } from 'zustand'
+import { AutoErrorModalMeta } from './components/AutoErrorModal/types'
 
 const AutoSuccessModal = lazy(() => import('./components/AutoSuccessModal'))
 const AutoErrorModal = lazy(() => import('./components/AutoErrorModal'))
@@ -17,7 +18,7 @@ export enum Modals {
 interface ModalMeta {
   [Modals.UPLOAD_SONG]: undefined
   [Modals.AUTO_SUCCESS]: undefined
-  [Modals.AUTO_ERROR]: undefined
+  [Modals.AUTO_ERROR]: AutoErrorModalMeta
 }
 
 interface ModalStore {
@@ -25,6 +26,7 @@ interface ModalStore {
   meta: Partial<ModalMeta>
   openModal: <T extends keyof ModalMeta>(modal: T, meta?: ModalMeta[T]) => void
   closeModal: () => void
+  getModalMeta: <T extends Modals>(modal: T) => ModalMeta[T] | undefined
 }
 
 const getModal = (modal: Modals) =>
@@ -42,7 +44,7 @@ export const ModalHandler = ({ modal }: { modal: Modals }) => {
   )
 }
 
-export const useModalStore = create<ModalStore>((set) => ({
+export const useModalStore = create<ModalStore>((set, get) => ({
   modals: [],
   meta: {} as ModalMeta,
   openModal: (modal, meta) =>
@@ -66,6 +68,7 @@ export const useModalStore = create<ModalStore>((set) => ({
       modals: [],
       meta: {},
     })),
+  getModalMeta: (modals) => get().meta[modals],
 }))
 
 export const ModalController = () => {
