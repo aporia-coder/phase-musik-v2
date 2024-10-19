@@ -1,7 +1,7 @@
 'use client'
 
 import axios from 'axios'
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { BaseModal } from '../../../Modal/components/BaseModal'
 import { Button } from '@/components/ui/button'
 import { useForm } from 'react-hook-form'
@@ -17,7 +17,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { UploadButton } from '@/utils'
 import Image from 'next/image'
-import { SongProgressValues } from './types'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { Modals } from '../../../Modal/types'
@@ -34,35 +33,15 @@ const UploadSongModal = () => {
   const decrementStep = () => setStep((prevStep) => prevStep - 1)
   const incrementStep = () => setStep((prevStep) => prevStep + 1)
 
-  const songProgress = useMemo((): SongProgressValues => {
-    return {
-      step: step,
-      imageUrl: imageUrl,
-      songName: songName,
-    }
-  }, [step, imageUrl, songName])
-
-  // use persist with zuzstand here
-  const updateLocalStorage = useCallback(
-    () => localStorage.setItem('songProgress', JSON.stringify(songProgress)),
-    [songProgress]
-  )
-
-  useEffect(() => {
-    updateLocalStorage()
-  }, [step, updateLocalStorage])
-
   const handleStepOne = async () => {
     await form.trigger(['name', 'artist'])
     if (Object.keys(form.formState.errors).length === 0) {
-      updateLocalStorage()
       incrementStep()
     }
   }
 
   const handleStepTwo = () => {
-    if (imageUrl) {
-      updateLocalStorage()
+    if (form.getValues('coverUrl')) {
       incrementStep()
     }
   }
@@ -187,7 +166,10 @@ const UploadSongModal = () => {
       2: (
         <>
           <Button onClick={decrementStep}>Back</Button>
-          <Button onClick={handleStepTwo} disabled={!imageUrl}>
+          <Button
+            onClick={handleStepTwo}
+            disabled={!form.getValues('coverUrl')}
+          >
             Next
           </Button>
         </>
