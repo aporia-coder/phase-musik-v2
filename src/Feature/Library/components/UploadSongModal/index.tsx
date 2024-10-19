@@ -5,7 +5,6 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { BaseModal } from '../../../Modal/components/BaseModal'
 import { Button } from '@/components/ui/button'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   FormControl,
@@ -23,6 +22,7 @@ import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { Modals } from '../../../Modal/types'
 import { useModalStore } from '@/Feature/Modal/store'
+import { SongPayload, SongValidator } from '@/validators'
 
 const UploadSongModal = () => {
   const router = useRouter()
@@ -67,23 +67,8 @@ const UploadSongModal = () => {
     }
   }
 
-  const formSchema = z.object({
-    name: z.string().min(1, {
-      message: 'Song name is required',
-    }),
-    artist: z.string().min(1, {
-      message: 'Artist name is required',
-    }),
-    coverUrl: z.string().url({
-      message: 'URL must point to a valid file',
-    }),
-    audioUrl: z.string().url({
-      message: 'URL must point to a valid file',
-    }),
-  })
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SongPayload>({
+    resolver: zodResolver(SongValidator),
     mode: 'onChange',
     defaultValues: {
       name: '',
@@ -93,7 +78,7 @@ const UploadSongModal = () => {
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: SongPayload) => {
     try {
       await axios.post('/api/library', values)
       closeModal()
@@ -198,8 +183,8 @@ const UploadSongModal = () => {
 
   const getModalButtons = () =>
     ({
-      1: () => <Button onClick={handleStepOne}>Next</Button>,
-      2: () => (
+      1: <Button onClick={handleStepOne}>Next</Button>,
+      2: (
         <>
           <Button onClick={decrementStep}>Back</Button>
           <Button onClick={handleStepTwo} disabled={!imageUrl}>
@@ -207,7 +192,7 @@ const UploadSongModal = () => {
           </Button>
         </>
       ),
-      3: () => (
+      3: (
         <>
           <Button onClick={decrementStep}>Back</Button>
           <Button
@@ -222,26 +207,22 @@ const UploadSongModal = () => {
       ),
     })[step]
 
-  const modalDescription = getModalDescription()
+  const modalDescription = getModalDescription() as string
   const modalButtons = getModalButtons()
   const modalContent = getModalContent()
-  const modalHeader = getModalHeader()
+  const modalHeader = getModalHeader() as string
 
   return (
-    modalButtons &&
-    modalContent &&
-    modalHeader && (
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <BaseModal
-            title={modalHeader}
-            buttons={modalButtons()}
-            description={modalDescription}
-            content={modalContent}
-          />
-        </form>
-      </Form>
-    )
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <BaseModal
+          title={modalHeader}
+          buttons={modalButtons}
+          description={modalDescription}
+          content={modalContent}
+        />
+      </form>
+    </Form>
   )
 }
 
