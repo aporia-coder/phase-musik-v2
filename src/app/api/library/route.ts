@@ -10,6 +10,7 @@ export async function POST(req: Request) {
 
     const { artist, audioUrl, coverUrl, name } = await req.json()
 
+    // can get rid of this by using the parse method with zod
     if (!artist || !audioUrl || !coverUrl || !name) {
       return new NextResponse('Missing data', { status: 400 })
     }

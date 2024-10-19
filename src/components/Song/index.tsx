@@ -1,7 +1,7 @@
-import { SongType } from '@/globals/types'
 import Image from 'next/image'
+import { SongProps } from './Song.types'
 
-export const Song = ({ name, artist, cover }: SongType) => {
+export const Song = ({ name, artist, cover }: SongProps) => {
   return (
     <div className="flex flex-col justify-center items-center my-8 gap-8">
       <div className="w-72 h-72 relative">

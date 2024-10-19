@@ -3,10 +3,10 @@ import { Logo } from '../Logo'
 import { Button } from '../ui/button'
 import { Headphones } from 'lucide-react'
 import Link from 'next/link'
-import { useLibrary } from '@/context/LibraryContext'
+import { useLibraryStore } from '@/Feature/Library/store'
 
 export const Navbar = () => {
-  const { toggleLibraryOpen } = useLibrary()
+  const { toggleLibraryOpen } = useLibraryStore()
 
   return (
     <nav className="flex justify-around items-center py-1">

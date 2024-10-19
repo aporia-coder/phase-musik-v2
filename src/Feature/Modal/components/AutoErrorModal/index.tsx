@@ -4,13 +4,14 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Modals, useModalStore } from '../../ModalController'
+import { useModalStore } from '../../store'
+import { Modals } from '../../types'
 
 const AutoErrorModal = () => {
   const { closeModal, getModalMeta } = useModalStore()
   const modalMeta = getModalMeta(Modals.AUTO_ERROR)
 
-  setTimeout(() => closeModal(), 1000)
+  setTimeout(() => closeModal(), 2000)
 
   return (
     <DialogContent className="flex flex-col justify-center items-center w-80 h-80 border-none">

@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { BaseModal } from '../BaseModal'
+import { BaseModal } from '../../../Modal/components/BaseModal'
 import { Button } from '@/components/ui/button'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -19,9 +19,10 @@ import { Input } from '@/components/ui/input'
 import { UploadButton } from '@/utils'
 import Image from 'next/image'
 import { SongProgressValues } from './types'
-import { Modals, useModalStore } from '../../ModalController'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
+import { Modals } from '../../../Modal/types'
+import { useModalStore } from '@/Feature/Modal/store'
 
 const UploadSongModal = () => {
   const router = useRouter()
@@ -41,6 +42,7 @@ const UploadSongModal = () => {
     }
   }, [step, imageUrl, songName])
 
+  // use persist with zuzstand here
   const updateLocalStorage = useCallback(
     () => localStorage.setItem('songProgress', JSON.stringify(songProgress)),
     [songProgress]
@@ -94,10 +96,11 @@ const UploadSongModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post('/api/library', values)
-      openModal(Modals.AUTO_SUCCESS)
       closeModal()
+      openModal(Modals.AUTO_SUCCESS)
       router.refresh()
     } catch (error) {
+      // can narrow down error handing by using zod on the api, and checking for axios errors/statuses
       openModal(Modals.AUTO_ERROR)
       console.log(error)
     }
@@ -142,6 +145,7 @@ const UploadSongModal = () => {
           <UploadButton
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
+              // could remove state, as this is the same data in two places?
               setImageUrl(res[0].url)
               form.setValue('coverUrl', res[0].url)
             }}
@@ -169,8 +173,8 @@ const UploadSongModal = () => {
               form.setValue('audioUrl', res[0].url)
             }}
             onUploadError={(error: Error) => {
-              // Do something with the error.
-              alert(`ERROR! ${error.message}`)
+              closeModal()
+              openModal(Modals.AUTO_ERROR, { error: error.message })
             }}
           />
           {songName && <p className="mx-auto">{songName}</p>}
