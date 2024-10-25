@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react'
 import { Modals } from './types'
 import { Dialog } from '@/components/ui/dialog'
 import { useModalStore } from './store'
+import { FallbackLoading } from './components/FallbackLoading'
 
 const AutoSuccessModal = lazy(
   () => import('../../Feature/Modal/components/AutoSuccessModal')
@@ -23,7 +24,7 @@ const getModal = (modal: Modals) =>
 export const ModalHandler = ({ modal }: { modal: Modals }) => {
   return (
     <Dialog open>
-      <Suspense fallback={<div>fallback</div>}>{getModal(modal)}</Suspense>
+      <Suspense fallback={<FallbackLoading />}>{getModal(modal)}</Suspense>
     </Dialog>
   )
 }
