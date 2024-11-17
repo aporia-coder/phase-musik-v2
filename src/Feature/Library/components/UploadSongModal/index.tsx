@@ -1,6 +1,6 @@
 'use client'
 
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { ReactNode, useState } from 'react'
 import { BaseModal } from '../../../Modal/components/BaseModal'
 import { Button } from '@/components/ui/button'
@@ -18,15 +18,14 @@ import { Input } from '@/components/ui/input'
 import { UploadButton } from '@/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
 import { Modals } from '../../../Modal/types'
 import { useModalStore } from '@/Feature/Modal/store'
 import { SongPayload, SongValidator } from '@/validators'
+import { Loader } from '@/components/Loader'
 
 const UploadSongModal = () => {
   const router = useRouter()
   const [step, setStep] = useState<number>(1)
-  const [imageUrl, setImageUrl] = useState<string>('')
   const [songName, setSongName] = useState<string>('')
   const { closeModal, openModal } = useModalStore()
 
@@ -64,8 +63,12 @@ const UploadSongModal = () => {
       openModal(Modals.AUTO_SUCCESS)
       router.refresh()
     } catch (error) {
-      // can narrow down error handing by using zod on the api, and checking for axios errors/statuses
-      openModal(Modals.AUTO_ERROR)
+      if (error instanceof AxiosError) {
+        if (error.status === 401) {
+          router.push('/sign-in')
+        }
+        openModal(Modals.AUTO_ERROR, { error: error.message })
+      }
       console.log(error)
     }
   }
@@ -109,17 +112,15 @@ const UploadSongModal = () => {
           <UploadButton
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
-              // could remove state, as this is the same data in two places?
-              setImageUrl(res[0].url)
               form.setValue('coverUrl', res[0].url)
             }}
             onUploadError={(error: Error) => {
               openModal(Modals.AUTO_ERROR, { error: error.message })
             }}
           />
-          {imageUrl && (
+          {form.getValues('coverUrl') && (
             <Image
-              src={imageUrl}
+              src={form.getValues('coverUrl')}
               width={200}
               height={200}
               alt="Song Image"
@@ -182,14 +183,14 @@ const UploadSongModal = () => {
             disabled={!songName || isLoading}
             onClick={form.handleSubmit(onSubmit)}
           >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading && <Loader className="mr-2 h-4 w-4" />}
             {isLoading ? 'Please wait' : 'Submit'}
           </Button>
         </>
       ),
     })[step]
 
-  const modalDescription = getModalDescription() as string
+  const modalDescription = getModalDescription()
   const modalButtons = getModalButtons()
   const modalContent = getModalContent()
   const modalHeader = getModalHeader() as string
