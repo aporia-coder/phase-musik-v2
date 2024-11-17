@@ -1,4 +1,4 @@
-export interface SongType {
+export interface SongProps {
   name: string
   artist: string
   cover: string

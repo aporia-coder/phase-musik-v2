@@ -3,9 +3,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useModalStore } from '../../ModalController'
 import { ModalHeaderProps } from './types'
 import { X } from 'lucide-react'
+import { useModalStore } from '../../store'
 
 export const ModalHeader = ({
   title,

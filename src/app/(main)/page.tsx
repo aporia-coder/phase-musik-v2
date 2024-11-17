@@ -1,5 +1,5 @@
-import { Library } from '@/components/Library'
 import { Song } from '@/components/Song'
+import { Library } from '@/Feature/Library/Library'
 import { prisma } from '@/lib/client'
 
 const HomePage = async () => {
