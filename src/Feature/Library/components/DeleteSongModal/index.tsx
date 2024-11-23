@@ -6,19 +6,21 @@ import { BaseModal } from '../../../Modal/components/BaseModal'
 import { useModalStore } from '../../../Modal/store'
 import { Modals } from '../../../Modal/types'
 import axios from 'axios'
-import { useRouter } from 'next/navigation'
+import { useModalSuccess } from '../../../../hooks/useModalSuccesss'
+import { useState } from 'react'
 
 const DeleteSongModal = () => {
-  const router = useRouter()
-  const { getModalMeta, closeModal, openModal } = useModalStore()
+  const { getModalMeta, closeModal } = useModalStore()
+  const [loading, setLoading] = useState(false)
   const song = getModalMeta(Modals.DELETE_SONG)
+  const modalSuccess = useModalSuccess()
 
   const deleteSong = async () => {
     try {
+      setLoading(true)
       await axios.patch(`/api/library`, song?.id)
-      closeModal()
-      openModal(Modals.AUTO_SUCCESS)
-      router.refresh()
+      modalSuccess()
+      setLoading(false)
     } catch (error) {
       console.log({ error })
     }
@@ -27,8 +29,8 @@ const DeleteSongModal = () => {
   const buttons = (
     <>
       <Button onClick={() => closeModal()}>Close</Button>
-      <Button variant={'destructive'} onClick={deleteSong}>
-        Confirm
+      <Button variant={'destructive'} onClick={deleteSong} disabled={loading}>
+        {loading ? 'Please wait....' : 'Confirm'}
       </Button>
     </>
   )

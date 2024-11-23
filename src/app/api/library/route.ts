@@ -40,13 +40,13 @@ export async function PATCH(req: Request) {
     if (!user) return new Response('Unauthorized', { status: 401 })
     if (!id) return new Response('Bad Request', { status: 400 })
 
-    const songs = await prisma.song.delete({
+    await prisma.song.delete({
       where: {
         id,
       },
     })
 
-    return Response.json({ success: true, songs })
+    return Response.json({ success: true, status: 200 })
   } catch (error) {
     return Response.json(
       { success: false, message: 'Internal server error' },

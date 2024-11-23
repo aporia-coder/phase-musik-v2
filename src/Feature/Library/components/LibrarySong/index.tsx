@@ -4,6 +4,7 @@ import { ActionTooltip } from '../../../../components/ActionTooltip'
 import { Trash } from 'lucide-react'
 import { useModalStore } from '../../../Modal/store'
 import { Modals } from '../../../Modal/types'
+import { TooltipAlign } from '../../../../components/ActionTooltip/types'
 
 export const LibrarySong = ({ song }: { song: Song }) => {
   const { openModal } = useModalStore()
@@ -15,7 +16,7 @@ export const LibrarySong = ({ song }: { song: Song }) => {
         <p className="font-bold">{song.name}</p>
         <p>{song.artist}</p>
       </div>
-      <ActionTooltip label="Delete">
+      <ActionTooltip label="Delete" align={TooltipAlign.CENTER}>
         <Trash
           className="hidden group-hover:flex self-start text-zinc-500 hover:text-zinc-400 w-4 h-4"
           onClick={() => openModal(Modals.DELETE_SONG, song)}

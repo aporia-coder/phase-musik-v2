@@ -22,12 +22,14 @@ import { Modals } from '../../../Modal/types'
 import { useModalStore } from '@/Feature/Modal/store'
 import { SongPayload, SongValidator } from '@/validators'
 import { Loader } from '@/components/Loader'
+import { useModalSuccess } from '../../../../hooks/useModalSuccesss'
 
 const UploadSongModal = () => {
   const router = useRouter()
   const [step, setStep] = useState<number>(1)
   const [songName, setSongName] = useState<string>('')
   const { closeModal, openModal } = useModalStore()
+  const modalSuccess = useModalSuccess()
 
   const decrementStep = () => setStep((prevStep) => prevStep - 1)
   const incrementStep = () => setStep((prevStep) => prevStep + 1)
@@ -59,9 +61,7 @@ const UploadSongModal = () => {
   const onSubmit = async (values: SongPayload) => {
     try {
       await axios.post('/api/library', values)
-      closeModal()
-      openModal(Modals.AUTO_SUCCESS)
-      router.refresh()
+      modalSuccess()
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.status === 401) {
