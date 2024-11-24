@@ -5,12 +5,14 @@ import { Button } from '../../../../components/ui/button'
 import { BaseModal } from '../../../Modal/components/BaseModal'
 import { useModalStore } from '../../../Modal/store'
 import { Modals } from '../../../Modal/types'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useModalSuccess } from '../../../../hooks/useModalSuccesss'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const DeleteSongModal = () => {
-  const { getModalMeta, closeModal } = useModalStore()
+  const router = useRouter()
+  const { getModalMeta, closeModal, openModal } = useModalStore()
   const [loading, setLoading] = useState(false)
   const song = getModalMeta(Modals.DELETE_SONG)
   const modalSuccess = useModalSuccess()
@@ -22,7 +24,13 @@ const DeleteSongModal = () => {
       modalSuccess()
       setLoading(false)
     } catch (error) {
-      console.log({ error })
+      if (error instanceof AxiosError) {
+        if (error.status === 401) {
+          router.push('/sign-in')
+        }
+        openModal(Modals.AUTO_ERROR, { error: error.message })
+      }
+      console.log(error)
     }
   }
 
