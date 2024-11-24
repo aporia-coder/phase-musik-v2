@@ -28,6 +28,7 @@ const UploadSongModal = () => {
   const router = useRouter()
   const [step, setStep] = useState<number>(1)
   const [songName, setSongName] = useState<string>('')
+  const [imageUrl, setImageUrl] = useState<string>('')
   const { closeModal, openModal } = useModalStore()
   const modalSuccess = useModalSuccess()
 
@@ -113,14 +114,15 @@ const UploadSongModal = () => {
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
               form.setValue('coverUrl', res[0].url)
+              setImageUrl(res[0].url)
             }}
             onUploadError={(error: Error) => {
               openModal(Modals.AUTO_ERROR, { error: error.message })
             }}
           />
-          {form.getValues('coverUrl') && (
+          {imageUrl && (
             <Image
-              src={form.getValues('coverUrl')}
+              src={imageUrl}
               width={200}
               height={200}
               alt="Song Image"
