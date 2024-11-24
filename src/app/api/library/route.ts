@@ -32,3 +32,25 @@ export async function POST(req: Request) {
     )
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const user = await currentUser()
+    const id = await req.json()
+    if (!user) return new Response('Unauthorized', { status: 401 })
+    if (!id) return new Response('Bad Request', { status: 400 })
+
+    await prisma.song.delete({
+      where: {
+        id,
+      },
+    })
+
+    return Response.json({ success: true, status: 200 })
+  } catch (error) {
+    return Response.json(
+      { success: false, message: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}

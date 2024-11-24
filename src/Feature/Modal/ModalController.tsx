@@ -14,11 +14,16 @@ const UploadSongModal = lazy(
   () => import('../Library/components/UploadSongModal')
 )
 
+const DeleteSongModal = lazy(
+  () => import('../Library/components/DeleteSongModal')
+)
+
 const getModal = (modal: Modals) =>
   ({
     [Modals.UPLOAD_SONG]: <UploadSongModal />,
     [Modals.AUTO_SUCCESS]: <AutoSuccessModal />,
     [Modals.AUTO_ERROR]: <AutoErrorModal />,
+    [Modals.DELETE_SONG]: <DeleteSongModal />,
   })[modal]
 
 export const ModalHandler = ({ modal }: { modal: Modals }) => {
