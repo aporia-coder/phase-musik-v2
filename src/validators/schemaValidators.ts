@@ -6,6 +6,7 @@ export const SongValidator = z.object({
   artist: StringValidator('artist'),
   coverUrl: URLValidator(),
   audioUrl: URLValidator(),
+  id: z.number().nullish(),
 })
 
 export type SongPayload = z.infer<typeof SongValidator>

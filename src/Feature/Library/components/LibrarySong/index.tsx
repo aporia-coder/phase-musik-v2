@@ -25,7 +25,9 @@ export const LibrarySong = ({ song }: { song: Song }) => {
         <ActionTooltip label="Edit">
           <Edit
             className=" text-zinc-500 hover:text-zinc-400 w-4 h-4"
-            onClick={() => openModal(Modals.DELETE_SONG, song)}
+            onClick={() =>
+              openModal(Modals.UPLOAD_EDIT_SONG, { song, isEdit: true })
+            }
           />
         </ActionTooltip>
       </div>

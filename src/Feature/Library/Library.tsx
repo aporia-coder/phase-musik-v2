@@ -21,7 +21,7 @@ export const Library = ({ songs }: { songs: Song[] }) => {
   useOnClickOutside(closeLibrary, libraryRef, !libraryOpen)
 
   const handleUploadClick = () => {
-    openModal(Modals.UPLOAD_SONG)
+    openModal(Modals.UPLOAD_EDIT_SONG)
     closeLibrary()
   }
 

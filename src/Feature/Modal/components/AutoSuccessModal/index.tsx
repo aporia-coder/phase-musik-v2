@@ -7,6 +7,7 @@ const AutoSuccessModal = () => {
 
   setTimeout(() => closeModal(), 2000)
 
+  // tie success message to api resonse
   return (
     <DialogContent className="flex flex-col justify-center items-center w-80 h-80 border-none">
       <TickIcon />
