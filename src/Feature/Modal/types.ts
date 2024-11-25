@@ -1,15 +1,16 @@
 import { Song } from '@prisma/client'
 import { AutoErrorModalMeta } from './components/AutoErrorModal/types'
+import { UploadEditSongMeta } from '../Library/components/UploadEditSongModal/types'
 
 export enum Modals {
-  UPLOAD_SONG = 'upload-song',
+  UPLOAD_EDIT_SONG = 'upload-edit-song',
   AUTO_SUCCESS = 'auto-success',
   AUTO_ERROR = 'auto-error',
   DELETE_SONG = 'delete-song',
 }
 
 export interface ModalMeta {
-  [Modals.UPLOAD_SONG]: undefined
+  [Modals.UPLOAD_EDIT_SONG]: UploadEditSongMeta
   [Modals.AUTO_SUCCESS]: undefined
   [Modals.AUTO_ERROR]: AutoErrorModalMeta
   [Modals.DELETE_SONG]: Song

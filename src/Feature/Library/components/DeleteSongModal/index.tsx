@@ -20,7 +20,11 @@ const DeleteSongModal = () => {
   const deleteSong = async () => {
     try {
       setLoading(true)
-      await axios.patch(`/api/library`, song?.id)
+      await axios.delete('/api/library', {
+        data: {
+          song,
+        },
+      })
       modalSuccess()
       setLoading(false)
     } catch (error) {
@@ -29,14 +33,14 @@ const DeleteSongModal = () => {
           router.push('/sign-in')
         }
         openModal(Modals.AUTO_ERROR, { error: error.message })
+        setLoading(false)
       }
-      console.log(error)
     }
   }
 
   const buttons = (
     <>
-      <Button onClick={() => closeModal()}>Close</Button>
+      <Button onClick={closeModal}>Close</Button>
       <Button variant={'destructive'} onClick={deleteSong} disabled={loading}>
         {loading ? 'Please wait....' : 'Confirm'}
       </Button>

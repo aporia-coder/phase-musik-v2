@@ -10,8 +10,8 @@ const AutoSuccessModal = lazy(
 const AutoErrorModal = lazy(
   () => import('../../Feature/Modal/components/AutoErrorModal')
 )
-const UploadSongModal = lazy(
-  () => import('../Library/components/UploadSongModal')
+const UploadEditSongModal = lazy(
+  () => import('../Library/components/UploadEditSongModal')
 )
 
 const DeleteSongModal = lazy(
@@ -20,7 +20,7 @@ const DeleteSongModal = lazy(
 
 const getModal = (modal: Modals) =>
   ({
-    [Modals.UPLOAD_SONG]: <UploadSongModal />,
+    [Modals.UPLOAD_EDIT_SONG]: <UploadEditSongModal />,
     [Modals.AUTO_SUCCESS]: <AutoSuccessModal />,
     [Modals.AUTO_ERROR]: <AutoErrorModal />,
     [Modals.DELETE_SONG]: <DeleteSongModal />,

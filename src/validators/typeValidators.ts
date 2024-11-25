@@ -1,5 +1,5 @@
-import { UppercaseFirst } from '@/utils'
 import { z } from 'zod'
+import { UppercaseFirst } from '../utils/UppercaseFirst'
 
 export const StringValidator = (value: string) =>
   z.string().min(1, {

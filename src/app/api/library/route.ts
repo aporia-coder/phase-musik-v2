@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/client'
 import { currentUser } from '@clerk/nextjs/server'
+import { SongValidator } from '../../../validators'
 
 export async function POST(req: Request) {
   try {
@@ -8,12 +9,8 @@ export async function POST(req: Request) {
 
     if (!user) return new Response('Unauthorized', { status: 401 })
 
-    const { artist, audioUrl, coverUrl, name } = body
-
-    // can get rid of this by using the parse method with zod
-    if (!artist || !audioUrl || !coverUrl || !name) {
-      return new Response('Missing data', { status: 400 })
-    }
+    const { artist, audioUrl, coverUrl, name } =
+      await SongValidator.parseAsync(body)
 
     await prisma.song.create({
       data: {
@@ -26,6 +23,36 @@ export async function POST(req: Request) {
 
     return Response.json({ success: true, status: 201 })
   } catch (error) {
+    return new Response('Internal server error', { status: 500 })
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const user = await currentUser()
+    const body = await req.json()
+
+    if (!user) return new Response('Unauthorized', { status: 401 })
+    if (!body) return new Response('Bad Request', { status: 400 })
+
+    const { artist, audioUrl, coverUrl, name, id } = SongValidator.parse(body)
+
+    await prisma.song.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        id: Number(id),
+        artist,
+        audioUrl,
+        coverUrl,
+        name,
+      },
+    })
+
+    return Response.json({ success: true, status: 200 })
+  } catch (error) {
+    console.log({ error })
     return Response.json(
       { success: false, message: 'Internal server error' },
       { status: 500 }
@@ -33,24 +60,23 @@ export async function POST(req: Request) {
   }
 }
 
-export async function PATCH(req: Request) {
+export async function DELETE(req: Request) {
   try {
     const user = await currentUser()
-    const id = await req.json()
+    const { song } = await req.json()
     if (!user) return new Response('Unauthorized', { status: 401 })
-    if (!id) return new Response('Bad Request', { status: 400 })
+    if (!song) return new Response('Bad Request', { status: 400 })
+
+    SongValidator.parse(song)
 
     await prisma.song.delete({
       where: {
-        id,
+        id: song.id,
       },
     })
 
-    return Response.json({ success: true, status: 200 })
+    return new Response('Success', { status: 200 })
   } catch (error) {
-    return Response.json(
-      { success: false, message: 'Internal server error' },
-      { status: 500 }
-    )
+    return new Response('Internal server error', { status: 500 })
   }
 }

@@ -24,13 +24,19 @@ import { SongPayload, SongValidator } from '@/validators'
 import { Loader } from '@/components/Loader'
 import { useModalSuccess } from '../../../../hooks/useModalSuccesss'
 
-const UploadSongModal = () => {
+const UploadEditSongModal = () => {
   const router = useRouter()
   const [step, setStep] = useState<number>(1)
-  const [songName, setSongName] = useState<string>('')
-  const [imageUrl, setImageUrl] = useState<string>('')
-  const { closeModal, openModal } = useModalStore()
+  const { closeModal, openModal, getModalMeta } = useModalStore()
+  const meta = getModalMeta(Modals.UPLOAD_EDIT_SONG)
   const modalSuccess = useModalSuccess()
+
+  const [imageUrl, setImageUrl] = useState<string | undefined>(
+    meta?.song.coverUrl
+  )
+  const [songName, setSongName] = useState<string | undefined>(meta?.song.name)
+
+  const isEdit = meta?.isEdit
 
   const decrementStep = () => setStep((prevStep) => prevStep - 1)
   const incrementStep = () => setStep((prevStep) => prevStep + 1)
@@ -52,14 +58,14 @@ const UploadSongModal = () => {
     resolver: zodResolver(SongValidator),
     mode: 'onChange',
     defaultValues: {
-      name: '',
-      artist: '',
-      coverUrl: '',
-      audioUrl: '',
+      name: isEdit ? meta.song.name : '',
+      artist: isEdit ? meta.song.artist : '',
+      coverUrl: isEdit ? meta.song.coverUrl : '',
+      audioUrl: isEdit ? meta.song.audioUrl : '',
     },
   })
 
-  const onSubmit = async (values: SongPayload) => {
+  const onCreateSubmit = async (values: SongPayload) => {
     try {
       await axios.post('/api/library', values)
       modalSuccess()
@@ -73,6 +79,26 @@ const UploadSongModal = () => {
       console.log(error)
     }
   }
+
+  const onEditSubmit = async (values: SongPayload) => {
+    try {
+      await axios.patch('/api/library', {
+        ...values,
+        id: meta?.song.id,
+      })
+      modalSuccess()
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.status === 401) {
+          router.push('/sign-in')
+        }
+        openModal(Modals.AUTO_ERROR, { error: error.message })
+      }
+      console.log(error)
+    }
+  }
+
+  const onSubmit = isEdit ? onEditSubmit : onCreateSubmit
 
   const isLoading = form.formState.isSubmitting
 
@@ -151,9 +177,9 @@ const UploadSongModal = () => {
 
   const getModalHeader = () =>
     ({
-      1: 'Upload Song Details',
-      2: 'Upload Image',
-      3: 'Upload Song',
+      1: `${isEdit ? 'Edit' : 'Upload'} Song Details`,
+      2: `${isEdit ? 'Edit' : 'Upload'} Image`,
+      3: `${isEdit ? 'Edit' : 'Upload'} Song`,
     })[step]
 
   const getModalDescription = () =>
@@ -211,4 +237,4 @@ const UploadSongModal = () => {
   )
 }
 
-export default UploadSongModal
+export default UploadEditSongModal
